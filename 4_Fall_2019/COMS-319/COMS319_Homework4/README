@@ -1,0 +1,8 @@
+Task 1:
+1. Open cars.html in your web browser
+
+Task 2:
+(Instructions written for Ubuntu 19.04)
+1. Navigate to the root directory of the project
+2. Run 'javac -d ./bin -cp ./bin -classpath "./lib/*" ./src/application/*' to compile the program
+3. Run 'java --module-path=./lib --add-modules=javafx.controls -Dfile.encoding=UTF-8 -classpath ./bin:./lib/javafx-swt.jar:./lib/javafx.base.jar:./lib/javafx.controls.jar:./lib/javafx.fxml.jar:./lib/javafx.graphics.jar:./lib/javafx.media.jar:./lib/javafx.swing.jar:./lib/javafx.web.jar application.Main' to play the game

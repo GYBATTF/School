@@ -1,0 +1,532 @@
+---------------------------------------------------
+[card.c / card.h]
+
+/**
+ * Chars for printing suits
+ */
+const char SUIT_CHARS_BRO[] = {'c', 'd', 'h', 's'};
+
+/**
+ * Card values
+ */
+const char VALUES[] = {'_', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'};
+
+const int SUIT_COLORS[] = {RED, BLACK, BLACK, RED};
+
+/**
+ * returns an int given a char card
+ */
+int getCardValue(char card); [Alex]
+
+//returns the card value as a char
+char getCardValueChar(int card); [Alex]
+
+//gets the suit of the char passed in and returns as an enum
+enum SUITS getSuit(char c); [Alex]
+
+//returns the the suit of an int as a char 
+char getSuitChar(int c); [Alex]
+
+———————————————————————————————
+[game.c / game.h]
+
+/**
+ * Stores the state of a game of Klondike/Solitaire
+ */
+struct game {
+    // Covered cards in the tableau
+    char tabCovered[7][6][2];
+    // Uncovered cards in the tableau
+    char tabUncovered[7][13][2];
+    // Foundations set
+    // {c, d, h, s}
+    int foundations[4];
+    // Cards in the stock
+    char stock[24][2];
+    // Cards in the waste
+    char waste[24][2];
+    // How many cards to flip
+    int turn;
+    // Limit of flips, -1 for unlimited
+    int limit;
+    // Array of moves
+    struct move *moves;
+   // Output method
+    struct out *output;
+    // Moves done
+    int moveCounter;
+};
+
+/**
+ * Initialized a game struct's elements
+ * @return
+ * an initialized game
+ */
+struct game* getGame(); [Alex]
+
+/**
+ * Frees the memory used by a game
+ * @param g
+ * game to free
+ */
+void freeGame(struct game *g); [Alex]
+
+—————————————————————————————————
+[moves.c / moves.h]
+
+//specifies the move taken
+enum MOVE_TYPE {RESET = 'r', FLIP = '.', MOVE = '>'};
+
+/**
+ * Stores information about a move
+ */
+struct move {
+    enum MOVE_TYPE type;
+    int src;
+    int dest;
+    struct move *next;
+    struct move *tail;
+};
+
+/**
+ * Adds a move to a game.
+ * @param g
+ * game to add move to
+ * @param c
+ * Valid options for c are:
+ * r - reset
+ * . - flip
+ * [1-7w] - source position
+ * @param dest
+ * Valid options for dest are:
+ * \0 - move is a reset or flip
+ * [1-7f] - destination position
+ */
+void addMove(struct game *g, char c, char d); [Alex]
+
+/**
+ * Does all the moves stored in the game
+ * @param g
+ * game to do moves from with
+ */
+void doAllMoves(struct game *g); [Alex]
+
+/**
+ * Attempts to do the number of moves specified
+ * @param g
+ * game to do moves on from
+ * @param n
+ * number of moves to try to do. if the number is greater than the number of listed moves,
+ * it will do as many as are available
+ */
+void doMoves(struct game *g, int n); [Alex]
+
+/**
+ * Gets the number of card in a pile
+ * @param a
+ * pile to get number of cards in
+ * @param maxSize
+ * maximum size of the pile
+ * @return
+ * size of the pile
+ */
+int sizeOfPile(char *a, int maxSize); [Alex]
+
+/**
+ * Uncovers a card on the tableau
+ * @param g
+ * game to uncover a card in
+ */
+void uncover(struct game *g); [Alex & Tracy]
+
+/**
+ * Determines if a card can stack onto the given card in the tableau
+ * @param src
+ * card to be stacked
+ * @param dest
+ * card to be stacked onto, 0 for empty tableau column
+ * @return
+ * 1 for stackable, 0 for unstackable
+ */
+int canStack(char *src, char *dest); [Alex]
+
+/**
+ * Moves piles around in the game
+ * @param g
+ * game to make move on
+ */
+int move(struct game *g) [Alex & Tracy]
+
+/**
+ * Flips the stock into the waste
+ * @param g
+ * game to make move on
+ */
+int flip(struct game *g) [Alex]
+
+/**
+ * Resets the waste pile back onto the stock
+ * @param g
+ * game to use move on
+ */
+int reset(struct game *g) [Alex & Tracy]
+
+/**
+ * Removes a played move
+ * @param g
+ * game to remove played move from
+ */
+void disconnect(struct game *g); [Alex]
+
+/**
+ * Calls the proper function for the move to be played,
+ * then removes the play from the game
+ * @param g
+ * game to make play from
+ */
+void playMove(struct game *g); [Alex]
+
+/**
+ * Connects two nodes together
+ * @param g
+ * game to connect node to
+ * @param m
+ * move to connect
+ */
+void connect(struct game *g, struct move *new); [Alex]
+
+//adds a move to account for
+void addMove(struct game *g, char c, char d); [Alex]
+———————————————————————————————————————
+[output.c / output.h]
+
+//different formats for readability 
+enum TYPES {EXCHANGE = 'x', HUMAN_READABLE = 'h', STATS = 's'};
+
+//specifying the what output type in struct
+struct out {
+    FILE* output;
+    enum TYPES type;
+};
+
+/**
+ * Prints the stats for a game in the format:
+ * Input file is valid
+ * # covered cards
+ * # stock cards
+ * # waste cards
+ * @param g
+ * @param out
+ * where to output to
+ */
+void printStats(struct game g, FILE* out); [Alex & Tracy]
+
+/**
+ * Print the game in a way that can be read as input for this program in the format:
+ * RULES:
+ * turn 1
+ * unlimited
+ * FOUNDATIONS:
+ * _c _d _h _S
+ * TABLEAU:
+ * cc cc | cc cc
+ * cc | cc
+ * | cc cc
+ * cc | cc cc
+ * cc | cc
+ * | cc
+ * |
+ * STOCK:
+ * cc cc | cc cc
+ * MOVES:
+ * #->#
+ * .
+ * r
+ * @param g
+ * game to print
+ * @param out
+ * where to output to
+ */
+void printExchange(struct game g, FILE* out) [Alex & Tracy]
+
+/**
+ * Print the game in a human readable format:
+ * Foundations
+ * _c _d _h _s
+ * Tableau
+ * cc ## ## ## ## ## ##
+ * .. cc ## ## ## ## ##
+ * .. .. cc ## ## ## ##
+ * .. .. .. cc ## ## ##
+ * .. .. .. .. cc ## ##
+ * .. .. .. .. .. cc ##
+ * .. .. .. .. .. .. cc
+ * Waste top
+ * cc cc cc
+ * @param g
+ * game to print
+ * @param out
+ * where to print to
+ */
+void printReadable(struct game g, FILE* out); [Alex & Tracy]
+
+/**
+ * Prints out a game in the format specified in its output type
+ * @param g
+ * game to print
+ */
+void print(struct game g); [Alex]
+
+——————————————————————————————————————-
+[scanner.c / scanner.h]
+
+/**
+ * Max size of a 'word' this number is based off the size of the word "FOUNDATIONS:"
+ */
+#define MAX_WORD_SIZE 13
+
+/**
+ * Sections to check for, this array is in the order that they need to appear in the document
+ */
+extern const char SECTIONS[5][MAX_WORD_SIZE];
+
+/**
+ * Parses the file input and adds information to a game struct.
+ * Will stop the entire program and print an error if issues with the input file is found
+ * @param in
+ * input stream to read from, can either be stdin or a file pointer
+ * @return
+ * a game set up from the file
+ */
+struct game* inputParser(FILE *in); [Alex]
+
+/**
+ * State of input reader, kept in global scope so other methods can access its variables
+ */
+struct state {
+    // Line number we are on, used in error messages
+    int line;
+    // Section of save we are reading
+    int section;
+    // Track if we are/have setting turn/limit. 0 = not setting, 1 = waiting for value, -1 = set, -2 = currently checking limit/unlimited
+    int setTurn;
+    int setLimit;
+    // Track which foundations are set
+    int setFoundations[4];
+    // Track how much of the tableau has been set
+    int tabs;
+    int tabCol;
+    int covUncov;
+    // Track if we are adding stock or waste
+    int stock;
+    int stockIndex;
+    int colChange;
+};
+
+/**
+ * Initialized the tracker for the state of the input reading
+ * @return
+ * an initialized state struct
+ */
+struct state getState(); [Alex]
+
+/**
+ * Gets a word from the input stream
+ * @param in
+ * input stream to read
+ * @return
+ * a char[] of a word
+ */
+void getWord(FILE *in, char word[], struct state s); [Alex]
+
+/**
+ * Compares two char arrays up to the MAX_WORD_SIZE
+ * @return
+ * 1 if equal
+ * 0 if not equal
+ */
+int compare(const char o1[], const char o2[]); [Alex]
+
+/**
+ * Validates a move from the MOVES section
+ * @param move
+ * move to validate
+ * @return
+ * 0 for invalid, 1 for valid
+ */
+int validateMove(const char move[]); [Alex]
+
+/**
+ * Checks that the order is valid and prints an error if it isn't
+ * @param w
+ * word to check against
+ * @param s
+ * state of parser
+ * @param next
+ * which section to test
+ */
+void orderCheck(char w[], struct state *s, int next); [Alex & Tracy]
+
+/**
+ * Parses the rules section
+ * @param g
+ * the game to add parsed rules to
+ * @param s
+ * state of the parser
+ * @param w
+ * word that was most recently grabbed
+ */
+void parseRules(struct game *g, struct state *s, char w[]); [Alex & Tracy]
+
+/**
+ * Parses the foundations section
+ * @param g
+ * the game to add parsed rules to
+ * @param s
+ * state of the parser
+ * @param w
+ * word that was most recently grabbed
+ */
+void parseFoundations(struct game *g, struct state *s, char w[]); [Alex]
+
+/**
+ * Parses the tableau section
+ * @param g
+ * the game to add parsed tableau to
+ * @param s
+ * state of the parser
+ * @param w
+ * word that was most recently grabbed
+ */
+void parseTableau(struct game *g, struct state *s, char w[]); [Alex]
+
+/**
+ * Parses the stock section
+ * @param g
+ * the game to add parsed rules to
+ * @param s
+ * state of the parser
+ * @param w
+ * word that was most recently grabbed
+ */
+void parseStock(struct game *g, struct state *s, char w[]) [Alex]
+
+/**
+ * Gets the current section we are in
+ * @param w
+ * word that was just read
+ * @param s
+ * pointer to the current state struct
+ */
+int checkSection(char w[], struct state *s, struct game *g); [Alex & Tracy]
+
+———————————————————————————————————————
+[validator.c / validator.h]
+
+/**
+ * Checks the order of the card in the tableau to ensure that they are stacked correctly
+ * @param g
+ * Game to check
+ */
+void tabOrderCheck(struct game *g); [Alex & Tracy]
+
+/**
+ * Checks to ensure no cards are missing or duplicated
+ * @param g
+ * the game board
+ */
+void allAboard(struct game *g); [Alex]
+
+—————————————————————————————————————————
+[advance.c] -> [Alex] [check.c] -> [Alex & Tracy]
+
+-----------------------------------------
+[solve.cc / solve.hh]
+
+//checks to see if switch v has been called
+void solver::verbose() [Alex]
+
+//checks to see if ALL moves must be analyzed
+void solver::all() [Alex]
+
+//check to see if -f switch has been called
+void solver:forcedFoundations() [Alex]
+
+//checks to see if -c swtich has been called
+void solver::cache() [Alex]
+
+//checks to see what the specified move limit is, if there is one
+void solver::moveLimit(unsigned limit) [Alex]
+
+//starts the solving process and depending on what switches are passed, different functions will be called
+void solver:solve(FILE* input) [Alex & Tracy]
+
+//finds the solution on the tableau while keeping track of what move it is currently on
+void solver::findSolution(struct game *g, unsigned timer) [Alex]
+
+//forces the program to move cards from the tableau to the foundation
+void solver::findForcedFoundations(struct game *g, unsigned timer) [Alex]
+
+//makes an attempt to make a valid move on either the tableau, waste, stock, or foundation
+void solver::attempt(struct game *g, unsigned timer, char src, char dest) [Alex & Tracy]
+
+//checks to see if the game has been won
+void solver::checkwin(struct game *g, unsigned timer); [Alex]
+
+void solver::cacheSolver() [Alex]
+
+---------------------------------------------------
+[interface.cc / interface.hh]
+
+//initializes the game based on switches passed
+interface::interface() [Alex]
+
+//destructor to completely wipe the game when done
+interface::~interface() [Alex & Tracy]
+
+//returns true if the game is a turn 1 game
+void interface::turn1() [Alex]
+
+//checks to see if game is turn 1 or turn 3
+void interface::turn3() [Alex]
+
+//specifies a limit if user specifies 
+void interface::limit(unsigned limit) [Alex]
+
+//takes in a seed for a randomly generated game 
+void interface::seed(unsigned s) [Alex]
+
+//takes in a file game as input
+void interface::file(char *file) [Alex]
+
+//bulk of the code, creates the GUI and makes the game playable 
+void interface::start() [Alex & Tracy]
+
+//initializes the game, for display and visual aspects
+void interface::init() [Alex & Tracy]
+
+//draws the area for the foundation cards
+void interface::drawFoundations() [Alex]
+
+//draws the area for the waste cards
+void interface::drawWaste() [Alex]
+
+//draws the area for the tableau cards
+void interface::drawTableau() [Alex]
+
+//generates a card based on location, suit and type
+void interface::drawCard(unsigned x, unsigned y, char* card) [Alex]
+
+//generates the back of a card 
+void interface::drawBack(unsigned x, unsigned y) [Alex]
+
+//generates a blank card
+void interface::drawBlank(unsigned x, unsigned y) 
+
+//lets a user undo a move or many moves 
+void interface::undo() [Alex]
+
+//lets a user interact with the playable board, move cards around
+void interface::move(char from, char to) [Alex]
+
+

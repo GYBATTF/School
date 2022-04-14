@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <meta charset = "utf-8"/>
+        <style>
+            p {text-align: center}
+        </style>
+    </head>
+
+    <body>
+        <p>
+            <input onCLick="stop()" type="button" id="start" name="start" value="Start"/>
+            <input onCLick="turn(false)" type="button" id="left" name="left" value="Turn Left"/>
+            <input onCLick="turn(true)" type="button" id="right" name="right" value="Turn Right"/>
+        </p>
+        <p>
+            <canvas id="cvs" style="border:1px solid #000000;"></canvas> 
+        </p>
+
+        <script src="./snake.js"></script>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+# shell352 Readme
+### ajharms
+
+## src/bools
+
+Simplifies conditionals and helps readability by
+declaring 1 and 0 as true and false and typedefing booleans.
+
+## src/input
+
+Handles reading and parsing input from the command line.
+Detects if the process need to run in the background and
+if there a file for reading/writing.
+
+## src/processes
+
+Handles creating processes and managing termination/running status.
+Contains most of the main code of the program. Gets the input
+from the user here too.
+
+## shell352
+
+Main loop for the shell, calls a function from
+processes until that function tells it to stop.

@@ -1,0 +1,84 @@
+This repository was created by Alex Harms and Tracy Le for COM S 327 Spring 2020
+
+[Parses through the input file for a game of solitaire (can be newly started, in the middle of a game, or almost complete) and correctly formats and appropriately stores and returns whether the logstics of the game are valid. If any part of the given game is invalid, it will return what error and where the error is]
+
+Features Implemented for Part 1:
+README (10pts)
+DEVELOPERS (10pts)
+Makefile (10pts)
+Reads from stdin if no filename argument (7pts)
+Reads from filename passed as argument (7pts)
+Normal output to stdout (4pts)
+Correctly formatted output on valid inputs (4pts)
+Reports correct number of covered cards on valid inputs (6pts)
+Reports correct number of stock cards on valid inputs (6pts)
+Reports correct number of waste cards on valid inputs (6pts)
+No error messages on valid inputs (5pts)
+Error messages to stderr (5pts)
+Formatting error messages include line numbers (5pts)
+Appropriate error messages for formatting errors (10pts)
+Check that the tableau piles are legal (10pts)
+Check for duplicate cards (5pts)
+Check for missing cards (5pts)
+Should be able to handle stress tests (5pts)
+
+---------------------------------
+[parses through the moves and goes through the game accordingly, updating the tableau to reflect the moves. Plays through VALID moves, if a move is invalid, will return what error. If all moves are valid, the tableau will be updated to reflect the moves. Switches can be specified to change up the dynamic of the game, a set number of moves can be set using -m annd -o and -x specify how the output should be formatted]
+
+Features Implemented for Part 2: 
+Updated README (10pts)
+Updated DEVELOPERS (10pts)
+Updated Makefile (10pts)
+Reads from stdin (6pts)
+Reads from filename passed as argument (6pts)
+Summary output to stdout (3pts)
+Output is in human-readable format (8pts)
+Correctly processes moves (12pts)
+-m switch (8pts)
+Appropriate error messages for formatting errors (10pts)
+Catches invalid moves (12pts)
+Stress tests 
+turn 3
+limit R
+-x switch for exchange format output (10pts)
+-o swtich (5pts)
+
+-------------------------------
+[looks at the current state of the game and using recursion/searches, checks to see if the game is winnable. If no valid moves are able to made, then the game is not winnable. Users can check to see if a game is winnable in a specific amount of moves as well]
+
+Features Implemented for Part 3:
+README file (10pts)
+DEVELOPERS file (10pts)
+Makefile (10pts)
+Reads from stdin if no filename argument (6pts)
+Reads from filename passed as argument (6pts)
+Output written to stdout (3pts)
+Output "# Game is winnable/not winnable" (5pts)
+Move sequences formatted correctly (5pts)
+-m swtich works (10pts)
+finds a winning sequence if one exists (35pts)
+Works for turn turn 3 (5pts)
+Works for limit R (5pts)
+-f switch works (10pts)
+
+-------------------------------
+[pretty ui for playing a game of solitaire either loaded from a file or generated from a seed]
+
+README file, that describes implemented features.  In particular, indicate which of the -f and -s switches are implemented, as TAs will grade based on this (6pts)
+Features Implemented for Part 4:
+DEVELOPERS file (7pts)
+Working Makefile (7pts)
+Your check executable still works (8pts)
+Your advance executable still works (8pts)
+Tableau display (12pts)
+Foundations display (8pts)
+Waste top display (8pts)
+Hotkeys display (8pts)
+Game play (14pts)
+Quit exits cleanly (4pts)
+-f switch works (10pts)
+-s switch works (10pts)
+Turn 3 (5pts)
+Limited stock resets (5pts)
+Undo last move (5pts)
+Undo ALL moves (5pts)

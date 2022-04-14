@@ -1,0 +1,25 @@
+# encrypt352 Readme
+### ajharms
+
+## src/supplied/
+Files supplied for the assignment go here to be compiled into the application
+
+## src/threads/encrypt352.c
+Main thread of the application.
+
+## src/threads/threads
+The other threads for the application.
+
+## src/util/bools
+Simplifies conditionals and helps readability by
+declaring 1 and 0 as true and false and typedefing booleans.
+
+## src/util/buffer
+Buffer for handling the threads in a thread safe way.  Only holds the characters,
+doesn't do any of the other work for them.
+
+## src/utils/errors
+Methods for printing error. Keeps track of exit statuses.
+
+## src/utils/print_counts
+Prints the output for the counts to the terminal.

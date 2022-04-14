@@ -1,0 +1,73 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Homework 4</title>
+  <style>
+      p {text-align: center;}
+      table.center {
+          margin-left: auto;
+          margin-right: auto;
+      }
+        table, th , td {
+            border: 1px solid grey;
+            border-collapse: collapse;
+            padding: 5px;
+            text-align: center;
+         }
+  </style>
+
+</head>
+
+<body ng-app = "mainApp" ng-controller = "carsController">
+    <p>
+        <table id = "carsTable" class = "center">
+            <tr>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th ng-click = "reverse = !reverse">Year</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Option</th>
+            </tr>
+            <tr ng-repeat = "x in carsList | orderBy : 'year' : reverse | filter : {manufacturer : selectedManufacturer}">
+                <td>{{ x.manufacturer }}</td>
+                <td>{{ x.model }}</td>
+                <td>{{ x.year }}</td>
+                <td>{{ x.stock }}</td>
+                <td>{{ x.price | currency }}</td>
+                <td><button ng-click = "x.stock = x.stock + 1">Increment</button></td>
+            </tr>
+        </table>
+        <p>
+            <select ng-model = "selectedManufacturer" ng-options = "x.value as x.label for x in uniqueCars"></select>
+        </p>
+    </p>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+  <script src="cars.js"></script>
+  <script>
+      var carshtml = angular.module('mainApp', []);
+      carshtml.controller('carsController', function($scope) {
+          $scope.carsList = cars;
+          $scope.reverse = false;
+          $scope.uniqueCars = [{"label" : "All", "value" : ""}];
+
+          $scope.selectedManufacturer = $scope.uniqueCars[0]["value"];
+          var unique = [];
+          for (var i = 0; i < cars.length; i++) {
+              if (!unique.includes(cars[i]["manufacturer"])) {
+                  unique.push(cars[i]["manufacturer"]);
+              }
+          }
+          unique.sort();
+          for (var i = 0; i < unique.length; i++) {
+            $scope.uniqueCars.push({"label" : unique[i], "value" : unique[i]});
+          }
+      });
+  </script>
+</body>
+</html>

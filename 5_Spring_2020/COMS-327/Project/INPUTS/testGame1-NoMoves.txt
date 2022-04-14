@@ -1,0 +1,16 @@
+RULES:
+turn 3
+limit 9
+FOUNDATIONS:
+_c _d _h _s
+TABLEAU:
+Kc 7h Jc 3h 8s 9d | 8h
+Qd Th 3c Kh Kd | 6h
+Qc 4c Ac 3d | 9s
+7d As 4d | Tc
+Ts 2d | Qs
+2s | 7s
+| 5h
+STOCK:
+| Qh 2h 4h 8d 5s 2c 6d Td Jh 6c 4s Ah 3s Ks 5c Jd 5d 6s 9c Js 7c 9h Ad 8c
+MOVES:

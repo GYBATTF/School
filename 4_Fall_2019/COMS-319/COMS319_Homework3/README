@@ -1,0 +1,6 @@
+Task 1:
+1. Open 'snake.html'.
+
+Task 2:
+1. Install readline-sync with "npm install --save readline-sync".
+2. Run "node hw3.js" in your terminal.

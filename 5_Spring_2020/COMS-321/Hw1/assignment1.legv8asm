@@ -1,0 +1,153 @@
+// Alexander Harms
+// ajharms
+main:
+    ADD X9, XZR, XZR // Array address stored in X11
+    ADDI X10, XZR, #8 // Array size 8
+
+    ADDI X0, X9, #0 // Store array address in x0 for call to fill
+    ADDI X1, X10, #0 // Store x10 in x1 for call to fill
+    BL fill // Fill the array
+
+    // Backup array index and size
+    SUBI SP, SP, #8
+    STUR X9, [SP, #0]
+    SUBI SP, SP, #8
+    STUR X10, [SP, #0]
+
+    ADDI X0, X9, #0 // Store array address in x0 for call to sort
+    ADDI X1, X10, #0 // Store x10 in x1 for call to sort
+    ADD X9, XZR, XZR
+    ADD X10, XZR, XZR
+    BL bubblesort // Sort
+
+    // Restore array index and size
+    LDUR X10, [SP, #0]
+    ADDI SP, SP, #8
+    LDUR X9, [SP, #0]
+    ADDI SP, SP, #8
+
+    B end // End the program
+
+swap:
+    // Swap
+    LDUR X9, [X0, #0]
+    LDUR X10, [X1, #0]
+    STUR X9, [X1, #0]
+    STUR X10, [X0, #0]
+
+    // Return no values
+    ADD X0, XZR, XZR
+    ADD X1, XZR, XZR
+    ADD X9, XZR, XZR
+    ADD X10, XZR, XZR
+
+    BR LR  // Return
+    
+compare:
+    LDUR X1, [X0, #8] // Get the next value
+    LDUR X0, [X0, #0] // Get the first value
+    SUBS XZR, X0, X1 // Compare
+    B.GT true // If X0 > X1 return true
+    ADD X0, XZR, XZR // Return 0 for false
+    ADD X1, XZR, XZR // Not returning anything in this register
+    BR LR // Return
+    true:
+        ADDI X0, XZR, #1 // Return 1 for true
+        ADD X1, XZR, XZR // Not returning anything in this register
+        BR LR // Return
+    
+        
+
+percolate:
+    SUBI X1, X1, #1 // size - 1
+
+    CBZ X1, percolated
+
+    // Call compare
+    SUBI SP, SP, #24
+    STUR LR, [SP, #16]
+    STUR X0, [SP, #8]
+    STUR X1, [SP, #0]
+    BL compare
+    ADD X2, X0, XZR // Move this guy over
+    LDUR X1, [SP, #0]
+    LDUR X0, [SP, #8]
+    LDUR LR, [SP, #16]
+    ADDI SP, SP, #24
+
+    CBZ X2, percolate
+    ADD X2, XZR, XZR
+
+    // Call swap
+    SUBI SP, SP, #24
+    STUR LR, [SP, #16]
+    STUR X0, [SP, #8]
+    STUR X1, [SP, #0]
+    ADDI X1, X0, #8
+    BL swap
+    LDUR X1, [SP, #0]
+    LDUR X0, [SP, #8]
+    LDUR LR, [SP, #16]
+    ADDI SP, SP, #24
+
+    ADDI X0, X0, #8
+
+    B percolate
+
+    // Clear registers and return
+    percolated:
+        ADD X0, XZR, XZR // Zero X0
+        ADD X1, XZR, XZR // Zero X1
+        BR LR
+
+
+bubblesort:
+    SUBIS XZR, X1, #1 // Compare to 1
+    B.LE sorted // Array of size == 1 is already sorted
+
+    // Backup link register and needed registers
+    SUBI SP, SP, #8
+    STUR LR, [SP, #0]
+    SUBI SP, SP, #8
+    STUR X0, [SP, #0]
+    SUBI SP, SP, #8
+    STUR X1, [SP, #0]
+    // Don't need to backup X0 or X1 since they are the inputs to percolate
+    
+    BL percolate
+
+    // Restore link register
+    LDUR X1, [SP, #0]
+    ADDI SP, SP, #8
+    LDUR X0, [SP, #0]
+    ADDI SP, SP, #8
+    LDUR LR, [SP, #0]
+    ADDI SP, SP, #8
+
+    SUBIS X1, X1, #1 // Decrement size
+    B.GT bubblesort // If size > 1 loop
+
+    // Clear return registers and return
+    sorted:
+        ADD X0, XZR, XZR
+        ADD X1, XZR, XZR
+        BR LR
+
+fill:
+    CBZ X1, filled // If the array size is zero theres no size to fill
+    STUR X1, [X0, #0] // Store current size in a[0]
+    SUBI X1, X1, #1 // Decrement size
+    ADDI X0, X0, #8 // Increment array index
+    CBNZ X1, fill // If size != 0 continue to fill
+
+    // Not returning anything, 
+    // so zero the registers and return
+    filled:
+        ADD X0, XZR, XZR 
+        ADD X1, XZR, XZR
+        BR LR
+    
+// Sheaffer said to just dump at the
+// end if I'm remembering correctly
+end:
+    DUMP

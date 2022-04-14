@@ -1,0 +1,23 @@
+RULES: 
+turn 3
+unlimited
+
+FOUNDATIONS:
+_c
+_d
+_h
+_s
+
+TABLEAU: 
+2h 6c Ac 3h 4h Th | Td
+Tc Kc Qh 6h 8s | As
+Kd 7c 7s Ah | Jc
+9c 7d 5d | Qs
+4s Jh | 8h
+Ks | 5c
+| 9s
+STOCK:
+| Ad 6d 3c Qd Js 3d 9h 6s 8c Kh 5s 5h Jd Qc 7h Ts 9d 4c 3s 8d 2s 2c 4d 2d
+
+MOVES:
+6->f 7->5 1->5 3->5 3->4 . . w->3 . . . w->6 . . w->f . r . . . w->1 4->1 3->4 . . . . r . . . . . . w->4 . r . . . . . . w->2 . r . w->2 . . . . . w->2 r . . w->6 4->6  . . w->1 . w->f . r . . . . .
